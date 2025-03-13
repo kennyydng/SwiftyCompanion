@@ -2,7 +2,7 @@ import { StyleSheet, View, TextInput, FlatList, Text, Image, ImageBackground, Pr
 import { useRouter } from 'expo-router';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthProvider';
-import { UserSearchResult } from '../services/api42';
+import { UserSearchResult } from '../types/api42.types';
 import { useUserSearch } from '../hooks/useUserSearch';
 
 export default function SearchScreen() {

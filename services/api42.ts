@@ -1,6 +1,24 @@
 import { ProfileData, UserSearchResult, CoalitionData, CoalitionInfo } from '../types/api42.types';
+import axios from 'axios';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthProvider';
 
 const API_URL = 'https://api.intra.42.fr/v2';
+
+const api42 = axios.create({
+  baseURL: API_URL,
+});
+
+export const createAPI42Service = (getToken: () => string) => {
+  api42.interceptors.request.use(async (config) => {
+    config.headers.Authorization = `Bearer ${getToken()}`;
+    return config;
+  });
+
+  return api42;
+};
+
+export default api42;
 
 export async function getUser(userLogin: string, token: string): Promise<ProfileData> {
   const response = await fetch(`${API_URL}/users/${userLogin}`, {
