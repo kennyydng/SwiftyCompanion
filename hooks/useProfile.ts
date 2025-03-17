@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthProvider';
-import { getUser, ProfileData } from '../services/api42';
+import { getUser } from '../services/api42';
+import { ProfileData } from '@/types/api42.types';
 
 export function useProfile(userLogin: string) {
   const [profile, setProfile] = useState<ProfileData | null>(null);

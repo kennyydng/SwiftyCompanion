@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, ImageBackground, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, ActivityIndicator, SafeAreaView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useProfile } from '../hooks/useProfile';
-import { ProjectUser, Skill, CursusUser } from '../types/api42.types';
+import { ProjectUser, Skill, CursusUser, CoalitionUser } from '../types/api42.types';
 import ProfileHeader from '../components/ProfileHeader';
 import TabContainer from '../components/TabContainer';
 import ProjectList from '../components/ProjectList';
@@ -15,6 +15,9 @@ export default function ProfileScreen() {
   const userLogin = params.login as string;
   const { profile, loading, error } = useProfile(userLogin);
   const [activeTab, setActiveTab] = useState<TabType>('projects');
+  const [selectedCursusId, setSelectedCursusId] = useState<string | null>(null);
+  const [isBackgroundLoaded, setIsBackgroundLoaded] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   if (loading) {
     return (
@@ -32,27 +35,39 @@ export default function ProfileScreen() {
     );
   }
 
+  const defaultCursusId = profile.cursus_users[profile.cursus_users.length - 1].cursus_id.toString();
+  const currentCursusId = selectedCursusId ?? defaultCursusId;
+
   const backgroundImage = profile.coalition?.cover_url
     ? { uri: profile.coalition.cover_url }
     : require('../assets/images/background.jpg');
 
   const coalitionColor = profile.coalition?.color || '#00BABC';
-  const cursusId = profile.cursus_users[profile.cursus_users.length - 1].cursus_id;
 
   const projectsData = profile.projects_users
-    .filter((item: ProjectUser) => item.cursus_ids.includes(cursusId));
+    .filter((item: ProjectUser) => item.cursus_ids.includes(Number(currentCursusId)));
 
   const skillsData = profile.cursus_users.find(
-    (cursus: CursusUser) => cursus.cursus_id === cursusId)?.skills
+    (cursus: CursusUser) => cursus.cursus_id === Number(currentCursusId))?.skills
     .map((item: Skill) => ({
       name: item.name,
       value: item.level
-    }));
+    })) || [];
 
   return (
-    <ImageBackground source={backgroundImage} style={styles.container} >
+    <ImageBackground
+      source={backgroundImage}
+      style={[styles.container, !isBackgroundLoaded && styles.loadingBackground]}
+      onLoad={() => setIsBackgroundLoaded(true)}
+    >
       <SafeAreaView style={styles.safeArea}>
-        <ProfileHeader profile={profile} />
+        <ProfileHeader
+          profile={profile}
+          selectedCursusId={currentCursusId}
+          onCursusChange={setSelectedCursusId}
+          isDropdownOpen={isDropdownOpen}
+          setIsDropdownOpen={setIsDropdownOpen}
+        />
 
         <TabContainer
           activeTab={activeTab}
@@ -76,6 +91,9 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadingBackground: {
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   safeArea: {
     flex: 1,

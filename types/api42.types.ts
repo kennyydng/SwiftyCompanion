@@ -13,10 +13,16 @@ export type ProfileData = {
   coalition?: CoalitionInfo;
 };
 
+export type Cursus = {
+  id: number;
+  name: string;
+};
+
 export type CursusUser = {
   cursus_id: number;
   level: number;
   skills: Array<Skill>;
+  cursus: Cursus;
 };
 
 export type Skill = {
@@ -31,9 +37,12 @@ export type ProjectUser = {
   cursus_ids: Array<number>;
 };
 
-export type CoalitionData = {
+export type CoalitionUser = {
   coalition_id: number;
+  coalition: CoalitionInfo;
+  score: number;
   rank: number;
+  cursus_id: number;
 };
 
 export type CoalitionInfo = {

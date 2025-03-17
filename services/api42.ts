@@ -1,4 +1,4 @@
-import { ProfileData, UserSearchResult, CoalitionData, CoalitionInfo } from '../types/api42.types';
+import { ProfileData, UserSearchResult, CoalitionInfo } from '../types/api42.types';
 import axios from 'axios';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthProvider';
@@ -79,7 +79,7 @@ export async function getCoalition(userId: string, token: string): Promise<{ coa
   if (!response.ok)
     throw new Error('Failed to fetch coalition data');
 
-  const coalitionsData: CoalitionData[] = await response.json();
+  const coalitionsData = await response.json();
 
   if (coalitionsData.length === 0)
     throw new Error('No coalition found');
@@ -95,7 +95,7 @@ export async function getCoalition(userId: string, token: string): Promise<{ coa
   if (!coalitionResponse.ok)
     throw new Error('Failed to fetch coalition info');
 
-  const coalitionInfo: CoalitionInfo = await coalitionResponse.json();
+  const coalitionInfo = await coalitionResponse.json();
 
   return {
     coalition: coalitionInfo,
