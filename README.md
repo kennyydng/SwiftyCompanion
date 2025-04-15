@@ -2,6 +2,8 @@
 
 Cette application mobile permet de consulter les profils des étudiants de 42. Elle utilise l'API de l'intranet 42 pour afficher les informations des utilisateurs.
 
+https://github.com/user-attachments/assets/2bcc15bd-5ed1-4236-a240-8bc7a9817ee8
+
 ## Fonctionnalités
 
 - Recherche d'utilisateurs par login
